@@ -56,7 +56,7 @@ public class CreditGatePageTest {
             assertEquals("DECLINED", SQLHelper.getCardRequestStatus());
         }
 
-        @Test // баг
+        @Test
         void verifyAllEmptySymbolsNumberForCredit() {
             dashboardPage.creditForm();
             var card = DataHelper.getAllNullSymbolsNumberCard();
@@ -126,7 +126,7 @@ public class CreditGatePageTest {
             assertEquals("0", SQLHelper.getOrderCount());
         }
 
-        @Test // баг
+        @Test
         void verifyRandomOnlyFirstNameForCredit() {
             dashboardPage.creditForm();
             var card = DataHelper.getRandomOnlyFirstName();
@@ -136,7 +136,7 @@ public class CreditGatePageTest {
             assertEquals("0", SQLHelper.getOrderCount());
         }
 
-        @Test // баг
+        @Test
         void verifyRandomOnlyLastNameForCredit() {
             dashboardPage.creditForm();
             var card = DataHelper.getRandomOnlyLastName();
@@ -146,7 +146,7 @@ public class CreditGatePageTest {
             assertEquals("0", SQLHelper.getOrderCount());
         }
 
-        @Test // баг
+        @Test
         void verifyRussianNameForCredit() {
             dashboardPage.creditForm();
             var card = DataHelper.getRandomRussianName();

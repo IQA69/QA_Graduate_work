@@ -42,7 +42,7 @@ public class PaymentGatePageTest {
     }
 
 
-    @Test // баг
+    @Test
     void verifyCardBakedForCard() {
         dashboardPage.cardForm();
         var card = DataHelper.getDeclinedCard();
@@ -52,7 +52,7 @@ public class PaymentGatePageTest {
         assertEquals("DECLINED", SQLHelper.getCardRequestStatus());
     }
 
-    @Test // баг
+    @Test
     void verifyAllEmptySymbolsNumberForCard() {
         dashboardPage.cardForm();
         var card = DataHelper.getAllNullSymbolsNumberCard();
@@ -123,7 +123,7 @@ public class PaymentGatePageTest {
         assertEquals("0", SQLHelper.getOrderCount());
     }
 
-    @Test // баг
+    @Test
     void verifyRandomOnlyFirstNameForCard() {
         dashboardPage.cardForm();
         var card = DataHelper.getRandomOnlyFirstName();
@@ -133,7 +133,7 @@ public class PaymentGatePageTest {
         assertEquals("0", SQLHelper.getOrderCount());
     }
 
-    @Test // баг
+    @Test
     void verifyRandomOnlyLastNameForCard() {
         dashboardPage.cardForm();
         var card = DataHelper.getRandomOnlyLastName();
@@ -143,7 +143,7 @@ public class PaymentGatePageTest {
         assertEquals("0", SQLHelper.getOrderCount());
     }
 
-    @Test // баг
+    @Test
     void verifyRussianNameForCard() {
         dashboardPage.cardForm();
         var card = DataHelper.getRandomRussianName();
