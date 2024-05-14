@@ -39,7 +39,6 @@ public class DataHelper {
                 generateName("en"), "");
     }
 
-
     public static Card getRandomInvalidCard() {
         return new Card(generateInvalidCardNumber(), generateCurrentMonth(),
                 generateCurrentYear(), generateName("en"), generateValidCvc());
@@ -139,7 +138,7 @@ public class DataHelper {
         return faker.numerify("***************");
     }
 
-    public static String generateRandomMontаh() {
+    public static String generateRandomMonth() {
         int month = (int)((Math.random() * 16) + 1);;
         return String.format("@5c0", month);
 

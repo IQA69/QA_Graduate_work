@@ -7,22 +7,23 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class DashboardPage {
-    private SelenideElement dashboardPageHeading = $(byText("Путешествие дня"));
-    private static SelenideElement elementPayCard = $(byText("Купить"));
-    private static SelenideElement elementPayCredit = $(byText("Купить в кредит"));
+    private static final SelenideElement buttonPayCard = $(byText("Купить"));
+    private static final SelenideElement buttonPayCredit = $(byText("Купить в кредит"));
 
     public DashboardPage() {
-        dashboardPageHeading
-                .shouldBe(visible);
+        SelenideElement dashboardPageHeading = $(byText("Путешествие дня"));
+        dashboardPageHeading.shouldBe(visible);
     }
 
-    public PaymentGatePage selectPayCard() {
-        elementPayCard.click();
-        return new PaymentGatePage();
+    public void cardForm() {
+        buttonPayCard.click();
+        new PaymentGatePage();
     }
 
-    public CreditGatePage selectPayCredit() {
-        elementPayCredit.click();
-        return new CreditGatePage();
+    public void creditForm() {
+        buttonPayCredit.click();
+        new CreditGatePage();
     }
+
+
 }

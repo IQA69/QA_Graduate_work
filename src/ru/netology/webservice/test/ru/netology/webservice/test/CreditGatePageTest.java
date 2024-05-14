@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import ru.netology.webservice.data.DataHelper;
 import ru.netology.webservice.data.SQLHelper;
 import ru.netology.webservice.page.CreditGatePage;
-import ru.netology.webservice.page.PaymentGatePage;
 import ru.netology.webservice.page.DashboardPage;
 
 import java.sql.SQLException;
@@ -18,12 +17,12 @@ import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreditGatePageTest {
-
     DashboardPage dashboardPage = open("http://localhost:8080/", DashboardPage.class);
 
     @AfterEach
     public void cleanBase() throws SQLException {
         SQLHelper.cleanDatabase();
+    }
 
     @BeforeAll
     static void setUpAll() {
@@ -206,7 +205,7 @@ public class CreditGatePageTest {
         @Test
         void verifyCvcEmptyFieldForCredit() {
             dashboardPage.creditForm();
-            var cardInfo = DataHelper.getCvcEmptyFieldCard();
+            var card = DataHelper.getCvcEmptyFieldCard();
             var creditPage = new CreditGatePage();
             creditPage.fillInCardData(card);
             creditPage.checkWrongFormat();

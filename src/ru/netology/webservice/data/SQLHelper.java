@@ -15,9 +15,9 @@ public class SQLHelper {
     private SQLHelper() {
     }
 
-    private static String url = System.getProperty("db.url");
-    private static String user = System.getProperty("db.user");
-    private static String password = System.getProperty("db.password");
+    private static final String url = System.getProperty("db.url");
+    private static final String user = System.getProperty("db.user");
+    private static final String password = System.getProperty("db.password");
 
     public static void cleanDatabase() throws SQLException {
         String deleteOrderEntity = "delete from order_entity;";
