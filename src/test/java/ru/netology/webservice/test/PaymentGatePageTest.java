@@ -77,6 +77,16 @@ public class PaymentGatePageTest {
     }
 
     @Test
+    void verifyValidCardNumberForCard() {
+        dashboardPage.cardForm();
+        var card = DataHelper.getRandomValidCard();
+        var buyPage = new PaymentGatePage();
+        buyPage.fillInCardData(card);
+        buyPage.checkWrongFormat();
+        assertEquals("0", SQLHelper.getOrderCount());
+    }
+
+    @Test
     void verifyInvalidEmptyMonthForCard() {
         dashboardPage.cardForm();
         var card = DataHelper.getRandomInvalidMonthNullSymbol();
@@ -95,7 +105,6 @@ public class PaymentGatePageTest {
         buyPage.checkWrongExpiryDateNotification();
         assertEquals("0", SQLHelper.getOrderCount());
     }
-
 
     @Test
     void verifyInvalidPreviousMonthForCard() {
@@ -148,6 +157,16 @@ public class PaymentGatePageTest {
     }
 
     @Test
+    void verifyRandomFullNameForCard() {
+        dashboardPage.cardForm();
+        var card = DataHelper.getRandomFullName();
+        var buyPage = new PaymentGatePage();
+        buyPage.fillInCardData(card);
+        buyPage.checkWrongFormat();
+        assertEquals("0", SQLHelper.getOrderCount());
+    }
+
+    @Test
     void verifyRussianNameForCard() {
         dashboardPage.cardForm();
         var card = DataHelper.getRandomRussianName();
@@ -158,9 +177,19 @@ public class PaymentGatePageTest {
     }
 
     @Test
-    void verifyInvalidCvcTwoSymbolsForCard() {
+    void verifyRandomInvalidCvcForCard() {
         dashboardPage.cardForm();
         var card = DataHelper.getRandomInvalidCvc();
+        var buyPage = new PaymentGatePage();
+        buyPage.fillInCardData(card);
+        buyPage.checkWrongFormat();
+        assertEquals("0", SQLHelper.getOrderCount());
+    }
+
+    @Test
+    void verifyInvalidCvcTwoSymbolsForCard() {
+        dashboardPage.cardForm();
+        var card = DataHelper.getRandomInvalidCvcTwoSymbols();
         var buyPage = new PaymentGatePage();
         buyPage.fillInCardData(card);
         buyPage.checkWrongFormat();

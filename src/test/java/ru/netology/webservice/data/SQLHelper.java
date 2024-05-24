@@ -10,10 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SQLHelper {
-    private static final QueryRunner runner = new QueryRunner();
-
-    private SQLHelper() {
-    }
 
     private static final String url = System.getProperty("db.url");
     private static final String user = System.getProperty("db.user");
@@ -29,7 +25,7 @@ public class SQLHelper {
 
                 PreparedStatement statementOrderEntity = connectionMysql.prepareStatement(deleteOrderEntity);
                 PreparedStatement statementPaymentEntity = connectionMysql.prepareStatement(deletePaymentEntity);
-                PreparedStatement statementCreditEntity = connectionMysql.prepareStatement(deleteCreditEntity);
+                PreparedStatement statementCreditEntity = connectionMysql.prepareStatement(deleteCreditEntity)
         ) {
             statementOrderEntity.executeUpdate();
             statementPaymentEntity.executeUpdate();

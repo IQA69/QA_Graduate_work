@@ -30,8 +30,7 @@ public class PaymentGatePage {
 
     public PaymentGatePage() {
         SelenideElement paymentGatePageHeading = $(byText("Оплата по карте"));
-        paymentGatePageHeading
-                .shouldBe(visible);
+        paymentGatePageHeading.shouldBe(visible);
     }
 
     public void clickContinueButton() {
@@ -61,8 +60,7 @@ public class PaymentGatePage {
     public void checkFieldRequiredNotification() {
         fieldRequiredNotification.shouldBe(Condition.visible, Duration.ofSeconds(15));
     }
-    public void checkErrorNotificationFourFields() {
-    }
+
     public void fillInCardData(DataHelper.Card card) {
         cardNumber.setValue(card.getNumber());
         cardMonth.setValue(card.getMonth());

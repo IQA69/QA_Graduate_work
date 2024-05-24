@@ -11,13 +11,10 @@ import java.util.Random;
 public class DataHelper {
     private static final Faker faker = new Faker(new Locale("en"));
 
-    private DataHelper() {
-
-    }
 
     public static Card getApprovedCard() {
-        return new Card("4444444444444441", generateCurrentMonth(),
-                generateCurrentYear(), generateName("en"), generateValidCvc());
+        return new Card("4444444444444441", generateCurrentYear(),
+                generateRandomMonth(), generateName("en"), faker.number().digits(3));
     }
 
     public static Card getDeclinedCard() {
@@ -34,6 +31,7 @@ public class DataHelper {
         return new Card("1111111111111111", generateCurrentMonth(), generateCurrentYear(),
                 generateName("en"), generateValidCvc());
     }
+
     public static Card getCvcEmptyFieldCard() {
         return new Card("4444444444444441", generateCurrentMonth(), generateCurrentYear(),
                 generateName("en"), "");
@@ -58,15 +56,16 @@ public class DataHelper {
         return new Card("4444444444444441", generateInvalidMonth(),
                 generateCurrentYear(), generateName("en"), generateValidCvc());
     }
+
     public static Card getRandomInvalidPastYear() {
         return new Card("4444444444444441", generateCurrentMonth(),
                 generatePastYear(), generateName("en"), generateValidCvc());
     }
+
     public static Card getRandomInvalidFutureYear() {
         return new Card("4444444444444441", generateCurrentMonth(),
                 generateFutureYear(), generateName("en"), generateValidCvc());
     }
-
 
     public static Card getRandomFullName() {
         return new Card("4444444444444441", generateCurrentMonth(),
@@ -82,10 +81,17 @@ public class DataHelper {
         return new Card("4444444444444441", generateCurrentMonth(),
                 generateCurrentYear(), generateOnlyFirstName("en"), generateValidCvc());
     }
+
     public static Card getRandomOnlyLastName() {
         return new Card("4444444444444441", generateCurrentMonth(),
                 generateCurrentYear(), generateOnlyLastName("en"), generateValidCvc());
     }
+
+    public static Card getRandomValidCard() {
+        return new Card(generateValidCardNumber(), generateCurrentMonth(),
+                generateCurrentYear(), generateName("en"), generateValidCvc());
+    }
+
     public static Card getRandomInvalidCvc() {
         return new Card("4444444444444441", generateRandomMonth(),
                 generateFutureYear(), generateName("en"), generateInvalidCvc());
@@ -100,6 +106,7 @@ public class DataHelper {
         return new Card("4444444444444441", generateCurrentMonth(),
                 generateCurrentYear(), "", generateValidCvc());
     }
+
     public static Card getMonthEmptyFieldCard() {
         return new Card("4444444444444441", "",
                 generateCurrentYear(), generateName("en"), generateValidCvc());
@@ -109,6 +116,7 @@ public class DataHelper {
         return new Card("4444444444444441", generateCurrentMonth(),
                 "", generateName("en"), generateValidCvc());
     }
+
     public static String generateName(String locale) {
         Faker faker = new Faker(new Locale(locale));
         return faker.name().firstName() + " " + faker.name().lastName();
@@ -128,6 +136,7 @@ public class DataHelper {
         Faker faker = new Faker(new Locale(locale));
         return faker.name().lastName();
     }
+
     public static String generateValidCardNumber() {
         Faker faker = new Faker();
         return faker.numerify("****************");
@@ -139,32 +148,34 @@ public class DataHelper {
     }
 
     public static String generateRandomMonth() {
-        int month = (int)((Math.random() * 16) + 1);;
-        return String.format("@5c0", month);
+        String text = String.valueOf((generateValidDate()));
+        char charAtFive = text.charAt(5);
+        char charAtSix = text.charAt(6);
+        return charAtFive + String.valueOf(charAtSix);
+    }
 
+    public static LocalDate generateValidDate() {
+        return LocalDate.now().plusMonths(10);
     }
 
     public static String generateInvalidMonth() {
         int month = (int) (17 + Math.random() * (99 - 17 + 1));
-        return String.format("@5c0", month);
+        return String.format("%5c0", month);
     }
-
 
     public static String generatePastMonth() {
         LocalDate currentDate = LocalDate.now();
         int month = currentDate.getMonthValue() - 1;
-        return String.format("@5c0", month);
+        return String.format("%5c0", month);
     }
 
     public static String generateInvalidNullMonth() {
         return ("00");
     }
 
-
-
     public static String generateCurrentYear() {
         LocalDate currentDate = LocalDate.now();
-        int year = currentDate.getYear() - 2000;
+        int year = currentDate.getYear() - 1999;
         return Integer.toString(year);
     }
 
@@ -181,8 +192,8 @@ public class DataHelper {
     }
 
     public static String generatePastYear() {
-        int pastYear = (int)((Math.random() * 24) - 1);;
-        return String.format("@5c0", pastYear);
+        int pastYear = (int)((Math.random() * 24) - 1);
+        return String.format("%5c0", pastYear);
     }
 
 

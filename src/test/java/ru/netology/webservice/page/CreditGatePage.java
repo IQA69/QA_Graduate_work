@@ -13,13 +13,12 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class CreditGatePage {
-    private final SelenideElement creditGatePageHeading = $(byText("Кредит по данным карты"));
 
-    private final SelenideElement cardNumber = $("[placeholder='1111 1111 1111 1111']");
-    private final SelenideElement cardMonth = $("[placeholder='03']");
-    private final SelenideElement cardYear = $("[placeholder='15']");
+    private final SelenideElement cardNumber = $("[placeholder='0000 0000 0000 0000']");
+    private final SelenideElement cardMonth = $("[placeholder='08']");
+    private final SelenideElement cardYear = $("[placeholder='22']");
     private final SelenideElement cardOwner = $(byText("Владелец")).parent().$(".input__control");
-    private final SelenideElement cvcCode = $("[placeholder='333']");
+    private final SelenideElement cvcCode = $("[placeholder='999']");
 
     private final SelenideElement continueButton = $(byText("Продолжить"));
     private final SelenideElement successNotification = $(".notification_status_ok");
@@ -32,7 +31,9 @@ public class CreditGatePage {
     private final SelenideElement cardExpiredNotification = $(byText("Истёк срок действия карты"));
     private final SelenideElement fieldRequiredNotification = $(byText("Поле обязательно для заполнения"));
 
-    public void CreditGatePageTest() {
+    public SelenideElement creditGatePageHeading = $(byText("Кредит по данным карты"));
+
+    public CreditGatePage() {
         creditGatePageHeading.shouldBe(visible);
     }
 
@@ -42,15 +43,6 @@ public class CreditGatePage {
 
     public void checkSuccessNotification() {
         successNotification.shouldBe(visible, Duration.ofSeconds(15));
-    }
-
-    public void fillInCardData(DataHelper.Card card) {
-        cardNumber.setValue(card.getNumber());
-        cardMonth.setValue(card.getMonth());
-        cardYear.setValue(card.getYear());
-        cardOwner.setValue(card.getHolder());
-        cvcCode.setValue(card.getCvc());
-        clickContinueButton();
     }
 
     public void checkErrorNotification() {
@@ -71,6 +63,15 @@ public class CreditGatePage {
 
     public void checkFieldRequiredNotification() {
         fieldRequiredNotification.shouldBe(visible, Duration.ofSeconds(15));
+    }
+
+    public void fillInCardData(DataHelper.Card card) {
+        cardNumber.setValue(card.getNumber());
+        cardMonth.setValue(card.getMonth());
+        cardYear.setValue(card.getYear());
+        cardOwner.setValue(card.getHolder());
+        cvcCode.setValue(card.getCvc());
+        clickContinueButton();
     }
 
 }
