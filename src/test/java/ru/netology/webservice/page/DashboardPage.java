@@ -1,29 +1,28 @@
 package ru.netology.webservice.page;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
 public class DashboardPage {
-    private static final SelenideElement buttonPayCard = $(byText("Купить"));
-    private static final SelenideElement buttonPayCredit = $(byText("Купить в кредит"));
+    private static final SelenideElement heading = $$("h2").find(Condition.text("Путешествие дня"));
+    private static final SelenideElement payButton = $$("button").find(exactText("Купить"));
+    private static final SelenideElement creditButton = $$("button").find(exactText("Купить в кредит"));
 
     public DashboardPage() {
-        SelenideElement dashboardPageHeading = $(byText("Путешествие дня"));
-        dashboardPageHeading.shouldBe(visible);
+        heading.shouldBe(visible);
     }
 
-    public void cardForm() {
-        buttonPayCard.click();
-        new PaymentGatePage();
+    public PaymentGatePage goToPayPage() {
+        payButton.click();
+        return new PaymentGatePage();
     }
 
-    public void creditForm() {
-        buttonPayCredit.click();
-        new CreditGatePage();
+    public CreditGatePage goToCreditPage() {
+        creditButton.click();
+        return new CreditGatePage();
     }
-
-
 }

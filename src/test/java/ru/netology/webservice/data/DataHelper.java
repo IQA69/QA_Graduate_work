@@ -1,218 +1,171 @@
 package ru.netology.webservice.data;
 
 import com.github.javafaker.Faker;
-import lombok.Value;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.Random;
 
 public class DataHelper {
-    private static final Faker faker = new Faker(new Locale("en"));
-
-
     public static Card getApprovedCard() {
-        return new Card("4444444444444441", generateCurrentYear(),
-                generateRandomMonth(), generateName("en"), faker.number().digits(3));
+        return new Card("4444444444444441", "10", "24", "Svetlana Sokolova", "789");
     }
 
     public static Card getDeclinedCard() {
-        return new Card("4444444444444442", generateCurrentMonth(),
-                generateCurrentYear(), generateName("en"), generateValidCvc());
+        return new Card("4444444444444442", "10", "24", "Svetlana Sokolova", "789");
     }
 
     public static Card getEmptyCard() {
-        return new Card("", generateCurrentMonth(), generateCurrentYear(),
-                generateName("en"), generateValidCvc());
+        return new Card("", "","","","");
     }
 
-    public static Card getAllNullSymbolsNumberCard() {
-        return new Card("1111111111111111", generateCurrentMonth(), generateCurrentYear(),
-                generateName("en"), generateValidCvc());
+    public static String getDisplacedMonth() {
+        int shift = (int) (Math.random() * 12);
+        return LocalDate.now().plusMonths(shift).format(DateTimeFormatter.ofPattern("MM"));
     }
 
-    public static Card getCvcEmptyFieldCard() {
-        return new Card("4444444444444441", generateCurrentMonth(), generateCurrentYear(),
-                generateName("en"), "");
+    public static String getDisplacedYear(int yearCount) {
+        return LocalDate.now().plusYears(yearCount).format(DateTimeFormatter.ofPattern("YY"));
     }
 
-    public static Card getRandomInvalidCard() {
-        return new Card(generateInvalidCardNumber(), generateCurrentMonth(),
-                generateCurrentYear(), generateName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomInvalidPastMonth() {
-        return new Card("4444444444444441", generatePastMonth(),
-                generateCurrentYear(), generateName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomInvalidMonthNullSymbol() {
-        return new Card("4444444444444441", generateInvalidNullMonth(),
-                generateCurrentYear(), generateName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomInvalidMonth() {
-        return new Card("4444444444444441", generateInvalidMonth(),
-                generateCurrentYear(), generateName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomInvalidPastYear() {
-        return new Card("4444444444444441", generateCurrentMonth(),
-                generatePastYear(), generateName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomInvalidFutureYear() {
-        return new Card("4444444444444441", generateCurrentMonth(),
-                generateFutureYear(), generateName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomFullName() {
-        return new Card("4444444444444441", generateCurrentMonth(),
-                generateCurrentYear(), generateFullName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomRussianName() {
-        return new Card("4444444444444441", generateCurrentMonth(),
-                generateCurrentYear(), generateName("ru"), generateValidCvc());
-    }
-
-    public static Card getRandomOnlyFirstName() {
-        return new Card("4444444444444441", generateCurrentMonth(),
-                generateCurrentYear(), generateOnlyFirstName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomOnlyLastName() {
-        return new Card("4444444444444441", generateCurrentMonth(),
-                generateCurrentYear(), generateOnlyLastName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomValidCard() {
-        return new Card(generateValidCardNumber(), generateCurrentMonth(),
-                generateCurrentYear(), generateName("en"), generateValidCvc());
-    }
-
-    public static Card getRandomInvalidCvc() {
-        return new Card("4444444444444441", generateRandomMonth(),
-                generateFutureYear(), generateName("en"), generateInvalidCvc());
-    }
-
-    public static Card getRandomInvalidCvcTwoSymbols() {
-        return new Card("4444444444444441", generateRandomMonth(),
-                generateFutureYear(), generateName("en"), generateFutureYear());
-    }
-
-    public static Card getOwnerEmptyFieldCard() {
-        return new Card("4444444444444441", generateCurrentMonth(),
-                generateCurrentYear(), "", generateValidCvc());
-    }
-
-    public static Card getMonthEmptyFieldCard() {
-        return new Card("4444444444444441", "",
-                generateCurrentYear(), generateName("en"), generateValidCvc());
-    }
-
-    public static Card getYearEmptyFieldCard() {
-        return new Card("4444444444444441", generateCurrentMonth(),
-                "", generateName("en"), generateValidCvc());
-    }
-
-    public static String generateName(String locale) {
-        Faker faker = new Faker(new Locale(locale));
-        return faker.name().firstName() + " " + faker.name().lastName();
-    }
-
-    public static String generateFullName(String locale) {
-        Faker faker = new Faker(new Locale(locale));
-        return faker.name().fullName();
-    }
-
-    public static String generateOnlyFirstName(String locale) {
-        Faker faker = new Faker(new Locale(locale));
-        return faker.name().firstName();
-    }
-
-    public static String generateOnlyLastName(String locale) {
-        Faker faker = new Faker(new Locale(locale));
-        return faker.name().lastName();
-    }
-
-    public static String generateValidCardNumber() {
+    public static Card getNumberCard14Symbols() {
         Faker faker = new Faker();
-        return faker.numerify("****************");
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(2);
+        String cvc = faker.number().digits(3);
+        String number = faker.number().digits(14);
+        return new Card(number, month, year, holder, cvc);
     }
 
-    public static String generateInvalidCardNumber() {
+    public static Card getCardNotInDatabase() {
         Faker faker = new Faker();
-        return faker.numerify("***************");
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(2);
+        String cvc = faker.number().digits(3);
+        return new Card("5444444444444444", month, year, holder, cvc);
     }
 
-    public static String generateRandomMonth() {
-        String text = String.valueOf((generateValidDate()));
-        char charAtFive = text.charAt(5);
-        char charAtSix = text.charAt(6);
-        return charAtFive + String.valueOf(charAtSix);
-    }
-
-    public static LocalDate generateValidDate() {
-        return LocalDate.now().plusMonths(10);
-    }
-
-    public static String generateInvalidMonth() {
-        int month = (int) (17 + Math.random() * (99 - 17 + 1));
-        return String.format("%5c0", month);
-    }
-
-    public static String generatePastMonth() {
-        LocalDate currentDate = LocalDate.now();
-        int month = currentDate.getMonthValue() - 1;
-        return String.format("%5c0", month);
-    }
-
-    public static String generateInvalidNullMonth() {
-        return ("00");
-    }
-
-    public static String generateCurrentYear() {
-        LocalDate currentDate = LocalDate.now();
-        int year = currentDate.getYear() - 1999;
-        return Integer.toString(year);
-    }
-
-    public static String generateCurrentMonth() {
-        return LocalDate.now().format(DateTimeFormatter.ofPattern("MM"));
-    }
-
-    public static String generateFutureYear() {
-        Random random = new Random();
-        int i = random.nextInt(7) + 7;
-        LocalDate futureDate = LocalDate.now().plusYears(i);
-        int year = futureDate.getYear() - 2000;
-        return Integer.toString(year);
-    }
-
-    public static String generatePastYear() {
-        int pastYear = (int)((Math.random() * 24) - 1);
-        return String.format("%5c0", pastYear);
-    }
-
-
-    public static String generateValidCvc() {
+    public static Card getCardMonth1Symbol() {
         Faker faker = new Faker();
-        return faker.numerify("***");
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = faker.number().digit();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", month, year, holder, cvc);
     }
 
-    public static String generateInvalidCvc() {
+    public static Card getCardMonthAbove12() {
         Faker faker = new Faker();
-        return faker.numerify("**");
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", "13", year, holder, cvc);
     }
 
-    @Value
-    public static class Card {
-        String number;
-        String year;
-        String month;
-        String holder;
-        String cvc;
+    public static Card getCardMonth00CurrentYear() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String year = getDisplacedYear(0);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", "00", year, holder, cvc);
+    }
+
+    public static Card getCardMonth00AboveCurrentYear() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", "00", year, holder, cvc);
+    }
+
+    public static Card getCardYear1Symbol() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = getDisplacedMonth();
+        String year = faker.number().digit();
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", month, year, holder, cvc);
+    }
+
+    public static Card getCardYearAboveCurrentYear4() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(4);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", month, year, holder, cvc);
+    }
+
+    public static Card getCardYearPreviousCurrentYear() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", month, year, holder, cvc);
+    }
+
+    public static Card getCardYear00() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = getDisplacedMonth();
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", month, "00", holder, cvc);
+    }
+
+    public static Card getCardCvc2Symbols() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(2);
+        return new Card("4444444444444441", month, year, holder, cvc);
+    }
+
+    public static Card getCardCvc1Symbol() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(1);
+        return new Card("4444444444444441", month, year, holder, cvc);
+    }
+
+    public static Card getCardOwner1Name() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName();
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", month, year, holder, cvc);
+    }
+
+    public static Card getCardOwnerRussian() {
+        Faker faker = new Faker(new Locale("ru"));
+        String holder = faker.name().firstName() + " " + faker.name().lastName();
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", month, year, holder, cvc);
+    }
+
+    public static Card getCardOwnerNumbers() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " " + faker.number().digit();
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", month, year, holder, cvc);
+    }
+
+    public static Card getCardSpecialSymbols() {
+        Faker faker = new Faker();
+        String holder = faker.name().firstName() + " %$ * &";
+        String month = getDisplacedMonth();
+        String year = getDisplacedYear(1);
+        String cvc = faker.number().digits(3);
+        return new Card("4444444444444441", month, year, holder, cvc);
     }
 }

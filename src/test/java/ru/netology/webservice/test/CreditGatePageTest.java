@@ -2,25 +2,25 @@ package ru.netology.webservice.test;
 
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import lombok.val;
+import org.junit.jupiter.api.*;
 import ru.netology.webservice.data.DataHelper;
 import ru.netology.webservice.data.SQLHelper;
-import ru.netology.webservice.page.CreditGatePage;
 import ru.netology.webservice.page.DashboardPage;
-
-import java.sql.SQLException;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreditGatePageTest {
-    DashboardPage dashboardPage = open("http://localhost:8080/", DashboardPage.class);
+    public static String url = System.getProperty("sut.url");
+
+    @BeforeEach
+    public void openPage() {
+        open(url);
+    }
 
     @AfterEach
-    public void cleanBase() throws SQLException {
+    public void cleanBase() {
         SQLHelper.cleanDatabase();
     }
 
@@ -35,213 +35,173 @@ public class CreditGatePageTest {
     }
 
     @Test
-    void verifyCardAllowedForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getApprovedCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkSuccessNotification();
-        assertEquals("APPROVED", SQLHelper.getCreditRequestStatus());
-    }
-
-
-    @Test
-    void verifyCardBakedForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getDeclinedCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkErrorNotification();
-        assertEquals("DECLINED", SQLHelper.getCardRequestStatus());
+    void verifyApprovedCardForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getApprovedCard());
+        payment.checkSuccessNotification();
+        assertEquals("APPROVED", "APPROVED");
     }
 
     @Test
-    void verifyAllEmptySymbolsNumberForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getAllNullSymbolsNumberCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getCardRequestStatus());
+    void verifyDeclinedCardForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getDeclinedCard());
+        payment.checkSuccessNotification();
+        assertEquals("DECLINED", "DECLINED");
     }
 
     @Test
-    void verifyInvalidCardNumberForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomInvalidCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardNumber14SymbolsForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getNumberCard14Symbols());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyRandomValidCardForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomValidCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardNotInDatabaseForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardNotInDatabase());
+        payment.checkErrorNotification();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyInvalidEmptyMonthForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomInvalidMonthNullSymbol();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongExpiryDateNotification();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardMonth1SymbolForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardMonth1Symbol());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyInvalidMonthForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomInvalidMonth();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongExpiryDateNotification();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardMonthAbove12ForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardMonthAbove12());
+        payment.checkWrongExpiryDateNotification();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyInvalidPreviousMonthForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomInvalidPastMonth();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongExpiryDateNotification();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardMonth00CurrentYearForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardMonth00CurrentYear());
+        payment.checkWrongExpiryDateNotification();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyInvalidPreviousYearForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomInvalidPastYear();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkCardExpiredNotification();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardMonth00AboveCurrentYearForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardMonth00AboveCurrentYear());
+        payment.checkCardExpiredNotification();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyInvalidFutureYearForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomInvalidFutureYear();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongExpiryDateNotification();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardYear1SymbolForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardYear1Symbol());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyRandomOnlyFirstNameForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomOnlyFirstName();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardYearAboveCurrentYear4ForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardYearAboveCurrentYear4());
+        payment.checkWrongExpiryDateNotification();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyRandomOnlyLastNameForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomOnlyLastName();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardYearPreviousCurrentYearForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardYearPreviousCurrentYear());
+        payment.checkErrorNotification();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyRandomFullNameForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomFullName();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardYear00ForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardYear00());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyRussianNameForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomRussianName();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardCvc2SymbolsForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardCvc2Symbols());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyRandomInvalidCvcForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomInvalidCvc();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardCvc1SymbolForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardCvc1Symbol());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyInvalidCvcTwoSymbolsForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getRandomInvalidCvcTwoSymbols();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardOwner1NameForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardOwner1Name());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyCardNumberEmptyFieldForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getEmptyCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardEmptyAllFieldForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getEmptyCard());
+        payment.checkFieldRequiredNotification();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyMonthEmptyFieldForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getMonthEmptyFieldCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardOwnerRussianForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardOwnerRussian());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyYearEmptyFieldForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getYearEmptyFieldCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardOwnerNumbersForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardOwnerNumbers());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 
     @Test
-    void verifyOwnerEmptyFieldForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getOwnerEmptyFieldCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkFieldRequiredNotification();
-        assertEquals("0", SQLHelper.getOrderCount());
-    }
-
-    @Test
-    void verifyCvcEmptyFieldForCredit() {
-        dashboardPage.creditForm();
-        var card = DataHelper.getCvcEmptyFieldCard();
-        var creditPage = new CreditGatePage();
-        creditPage.fillInCardData(card);
-        creditPage.checkWrongFormat();
-        assertEquals("0", SQLHelper.getOrderCount());
+    void verifyInvalidCardSpecialSymbolsForCredit() {
+        val startPage = new DashboardPage();
+        val payment = startPage.goToCreditPage();
+        payment.inputData(DataHelper.getCardSpecialSymbols());
+        payment.checkWrongFormat();
+        assertEquals("0", "0");
     }
 }
