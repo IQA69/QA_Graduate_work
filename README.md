@@ -12,6 +12,13 @@
 
 [Отчёт по итогам автоматизации](https://github.com/IQA69/QA_Graduate_work/blob/main/docs/Summary.md)
 
+
+## Запуск приложения
+
+- Установить IntelliJ IDEA
+- Установать и запустить Docker Desktop
+- Установить Node.js
+
 ## Запуск автотестов
 
 - Склонировать репозиторий с Github по ссылке:
