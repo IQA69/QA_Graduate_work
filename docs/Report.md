@@ -8,11 +8,9 @@
 
 Выдача кредита по данным банковской карты.
 
-
 Заявлена поддержка двух СУБД:
 - MySQL
 - PostgreSQL
-
 
 ## Количество тест-кейсов
 
@@ -21,7 +19,11 @@
 - 22 успешных (57,89%)
 - 16 неуспешных (42,11%)
 
+[Отчёт Allure](https://github.com/IQA69/QA_Graduate_work/blob/main/docs/images/Allure%20report.png)
+
+[Отчёт Gradle](https://github.com/IQA69/QA_Graduate_work/blob/main/docs/images/Gradle%20report.png)
+
 ## Общие рекомендации
 
-- Устранить имеющиеся баги
+- Устранить найденные баги оформленные в [issue](https://github.com/IQA69/QA_Graduate_work/issues)
 - Настроить валидацию полей ввода.

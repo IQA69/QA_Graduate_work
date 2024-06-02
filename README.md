@@ -8,6 +8,10 @@
 
 [План автоматизации тестирования веб-сервиса](https://github.com/IQA69/QA_Graduate_work/blob/main/Plan.md)
 
+[Отчёт по итогам тестирования](https://github.com/IQA69/QA_Graduate_work/blob/main/docs/Report.md)
+
+[Отчёт по итогам автоматизации](https://github.com/IQA69/QA_Graduate_work/blob/main/docs/Summary.md)
+
 ## Запуск автотестов
 
 - Склонировать репозиторий с Github по ссылке:
@@ -48,7 +52,7 @@
 
 `./gradlew clean test "-Ddb.url=jdbc:postgresql://localhost:5432/app"`
 
-Генерация отчёта Allure с автоматическим открытием в браузере:
+## Генерация отчёта Allure с автоматическим открытием в браузере:
 
 `./gradlew allureServe`
 
@@ -56,6 +60,6 @@
 
 `CTRL+C` в окне терминала, где был запущен веб-сервис
 
-Остановка и удаление контейнеров:
+## Остановка и удаление контейнеров:
 
 `docker-compose down`
